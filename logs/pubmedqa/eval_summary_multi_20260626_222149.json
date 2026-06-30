@@ -1,0 +1,56 @@
+{
+  "cot": {
+    "Mean Accuracy": 0.72,
+    "Consensus Shift": 0.0,
+    "Avg Evidence Overlap": 1.0,
+    "Total Revision Utility": 0,
+    "Mean CARA LLM Score": NaN,
+    "Total CARA LLM Cost": 0,
+    "Total Cost": 5.6459850000000005
+  },
+    "specialized_board": {
+    "Mean Accuracy": 0.694,
+    "Consensus Shift": 0.10799999999999998,
+    "Avg Evidence Overlap": 0.17802222222222222,
+    "Total Revision Utility": -9,
+    "Mean CARA LLM Score": 4.0386662,
+    "Total CARA LLM Cost": 12.122055,
+    "Total Cost": 37.199385
+  },
+  "vote": {
+    "Mean Accuracy": 0.72,
+    "Consensus Shift": 0.0,
+    "Avg Evidence Overlap": 0.22425555555555557,
+    "Total Revision Utility": 0,
+    "Mean CARA LLM Score": 4.5033334,
+    "Total CARA LLM Cost": 12.508575,
+    "Total Cost": 17.046165
+  },
+  "symmetric_debate": {
+    "Mean Accuracy": 0.728,
+    "Consensus Shift": 0.04400000000000004,
+    "Avg Evidence Overlap": 0.24536190476190473,
+    "Total Revision Utility": 7,
+    "Mean CARA LLM Score": 4.5399988,
+    "Total CARA LLM Cost": 11.899425,
+    "Total Cost": 37.111740000000005
+  },
+  "critic": {
+    "Mean Accuracy": 0.608,
+    "Consensus Shift": 0.04800000000000004,
+    "Avg Evidence Overlap": 0.2359,
+    "Total Revision Utility": -119,
+    "Mean CARA LLM Score": 4.4793338,
+    "Total CARA LLM Cost": 11.730675000000002,
+    "Total Cost": 28.499070000000003
+  },
+  "workflow": {
+    "Mean Accuracy": 0.716,
+    "Consensus Shift": 0.0,
+    "Avg Evidence Overlap": 1.0,
+    "Total Revision Utility": 0,
+    "Mean CARA LLM Score": NaN,
+    "Total CARA LLM Cost": 0,
+    "Total Cost": 10.94547
+  }
+}
