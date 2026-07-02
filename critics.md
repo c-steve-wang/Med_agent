@@ -534,3 +534,33 @@ Before using it for serious experimental claims, the implementation should guara
 - answer parsing is deterministic;
 - metrics are only reported where they are semantically valid;
 - prompts, configuration, and token usage are saved for reproduction.
+
+## Additional Comment
+
+### 1. The answer is leaked into the question (QA dataset)
+
+For the `qa` dataset, the loader takes each item's `Scoring_Points` and feeds them to the model as "grounding evidence." But `Scoring_Points` are not neutral facts — they are the grading notes that explain *why the correct answer is correct* (they literally name the diagnosis and the right option). So every architecture is basically handed the answer before it starts. This makes the QA accuracy numbers look great for everyone and makes it impossible to tell which architecture actually reasons better. (Note: for PubMedQA the evidence is the real abstract, which is fine — only the QA path leaks.)
+
+### 2. Valid judge scores are thrown away because of their type
+
+The CARA judge is supposed to return a score from 1 to 5. The parser only accepts the score if it is a Python `int`. But language models very often return the number as a string (`"3"`) or a float (`3.0`). When that happens, the code treats a perfectly good score as a failure, retries three times for nothing, and finally records "no score." Real judgments are silently lost.
+
+### 3. One bad row can crash the whole dataset load
+
+When reading the QA data, the code takes the first character of the `answer` field to use as the gold label. It guards against the `answer` key being *missing*, but not against it being an *empty string*. If any row has an empty answer, taking its first character throws an error and the entire dataset fails to load. (Today's data happens to have no empty answers, so this is a landmine waiting to go off, not a bug you'd see right now.)
+
+### 4. Single-agent methods get fake "perfect" scores
+
+Some metrics (agreement between agents, evidence overlap) only make sense when there are at least two agents to compare. For single-agent methods like `cot` and the `workflow` pipeline, there is nothing to compare, and the code quietly fills in `1.0` (a perfect score) instead of "not applicable." So when you compare architectures side by side, `cot` and `workflow` look like they have flawless consistency — purely as an artifact of the default value, not because they actually agree with anything.
+
+### 5. The judge is run three times but can never disagree with itself
+
+The reasoning-alignment judge (CARA) is called three times per comparison and the scores are averaged, which is a technique for smoothing out randomness. But the judge is run at temperature 0, meaning it is (near) deterministic — all three runs produce essentially the same score every time. The result: the "standard deviation" is always about zero, and you pay triple the cost and time for no extra information. Averaging only helps if the judge temperature is above zero.
+
+### 6. The "independent vote" agents are not actually independent
+
+The voting method creates three agents (Alpha, Beta, Gamma) and calls them "independent," but all three receive the exact same prompt. The only thing that makes their answers differ is random sampling (temperature 0.4). So this is really one agent sampled three times, not three independent opinions. Majority voting is much weaker when the "voters" are just re-rolls of the same setup, and the agreement metric is inflated as a result.
+
+### 7. In the debate, each agent sees its own answer disguised as a peer's
+
+The `symmetric_debate` method has a second round where each agent is shown its peers' answers so it can reconsider. The problem: the block of "anonymous peer rationales" is built once from **all** agents — including the agent that is about to read it — and the same block is handed to everyone. So when Alpha reviews the "peer" opinions, its own first-round answer is sitting in there labeled as an anonymous peer. Each agent effectively finds a "peer" who agrees with it (itself), which pushes everyone to stick with their original answer and undermines the whole point of debating. The fix is to exclude each agent's own output when building the peer list for that agent.
