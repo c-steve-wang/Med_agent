@@ -1,0 +1,184 @@
+{
+  "stats": {
+    "files_processed": 18,
+    "fields_changed": 22002,
+    "aggregates_recomputed": 4993,
+    "lines": 13653
+  },
+  "unresolved": [
+    {
+      "case_id": "239",
+      "dataset": "qa",
+      "raw": "A and C are correct; B and D are incorrect.",
+      "reason": "no_match_found"
+    },
+    {
+      "case_id": "61",
+      "dataset": "qa",
+      "raw": "D",
+      "reason": "critic_tiebreak_not_recoverable_from_trace"
+    },
+    {
+      "case_id": "130",
+      "dataset": "qa",
+      "raw": "maybe",
+      "reason": "no_match_found"
+    },
+    {
+      "case_id": "177",
+      "dataset": "qa",
+      "raw": "A, C",
+      "reason": "no_match_found"
+    },
+    {
+      "case_id": "177",
+      "dataset": "qa",
+      "raw": "A, C",
+      "reason": "no_match_found"
+    },
+    {
+      "case_id": "207",
+      "dataset": "qa",
+      "raw": "C",
+      "reason": "critic_tiebreak_not_recoverable_from_trace"
+    },
+    {
+      "case_id": "282",
+      "dataset": "qa",
+      "raw": "A",
+      "reason": "critic_tiebreak_not_recoverable_from_trace"
+    },
+    {
+      "case_id": "349",
+      "dataset": "qa",
+      "raw": "A",
+      "reason": "critic_tiebreak_not_recoverable_from_trace"
+    },
+    {
+      "case_id": "394",
+      "dataset": "qa",
+      "raw": "no",
+      "reason": "no_match_found"
+    },
+    {
+      "case_id": "394",
+      "dataset": "qa",
+      "raw": "no",
+      "reason": "no_match_found"
+    },
+    {
+      "case_id": "394",
+      "dataset": "qa",
+      "raw": "no",
+      "reason": "no_match_found"
+    },
+    {
+      "case_id": "404",
+      "dataset": "qa",
+      "raw": "C",
+      "reason": "critic_tiebreak_not_recoverable_from_trace"
+    },
+    {
+      "case_id": "228",
+      "dataset": "qausmle",
+      "raw": "maybe",
+      "reason": "no_match_found"
+    },
+    {
+      "case_id": "334",
+      "dataset": "qausmle",
+      "raw": "B, C",
+      "reason": "no_match_found"
+    },
+    {
+      "case_id": "334",
+      "dataset": "qausmle",
+      "raw": "B, C, D",
+      "reason": "no_match_found"
+    },
+    {
+      "case_id": "477",
+      "dataset": "qausmle",
+      "raw": "A",
+      "reason": "critic_tiebreak_not_recoverable_from_trace"
+    },
+    {
+      "case_id": "709",
+      "dataset": "qausmle",
+      "raw": "maybe",
+      "reason": "no_match_found"
+    },
+    {
+      "case_id": "709",
+      "dataset": "qausmle",
+      "raw": "maybe",
+      "reason": "no_match_found"
+    },
+    {
+      "case_id": "709",
+      "dataset": "qausmle",
+      "raw": "maybe",
+      "reason": "no_match_found"
+    },
+    {
+      "case_id": "709",
+      "dataset": "qausmle",
+      "raw": "maybe",
+      "reason": "no_match_found"
+    },
+    {
+      "case_id": "1009",
+      "dataset": "qausmle",
+      "raw": "maybe",
+      "reason": "no_match_found"
+    },
+    {
+      "case_id": "817",
+      "dataset": "qausmle",
+      "raw": "C, E",
+      "reason": "no_match_found"
+    },
+    {
+      "case_id": "917",
+      "dataset": "qausmle",
+      "raw": "Insulinoma",
+      "reason": "no_match_found"
+    },
+    {
+      "case_id": "24139705",
+      "dataset": "pubmedqa",
+      "raw": "B",
+      "reason": "critic_tiebreak_not_recoverable_from_trace"
+    },
+    {
+      "case_id": "24977765",
+      "dataset": "pubmedqa",
+      "raw": "yes",
+      "reason": "critic_tiebreak_not_recoverable_from_trace"
+    },
+    {
+      "case_id": "18926458",
+      "dataset": "pubmedqa",
+      "raw": "maybe",
+      "reason": "critic_tiebreak_not_recoverable_from_trace"
+    },
+    {
+      "case_id": "24352924",
+      "dataset": "pubmedqa",
+      "raw": "maybe",
+      "reason": "critic_tiebreak_not_recoverable_from_trace"
+    },
+    {
+      "case_id": "9465206",
+      "dataset": "pubmedqa",
+      "raw": "maybe",
+      "reason": "critic_tiebreak_not_recoverable_from_trace"
+    },
+    {
+      "case_id": "26126304",
+      "dataset": "pubmedqa",
+      "raw": "maybe",
+      "reason": "critic_tiebreak_not_recoverable_from_trace"
+    }
+  ]
+}
