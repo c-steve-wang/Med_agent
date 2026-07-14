@@ -1,0 +1,27 @@
+{
+  "critic": {
+    "n_scored": 500,
+    "n_skipped": 0,
+    "high_hallucination": 81,
+    "propagation_traced": 348,
+    "wrong": 348,
+    "consensus_illusion": 6,
+    "has_sycophantic_flip": 1
+  },
+  "specialized_board": {
+    "n_scored": 500,
+    "n_skipped": 0,
+    "high_hallucination": 181,
+    "propagation_traced": 75,
+    "wrong": 76,
+    "has_sycophantic_flip": 1,
+    "consensus_illusion": 4
+  },
+  "workflow": {
+    "n_scored": 500,
+    "n_skipped": 0,
+    "high_hallucination": 27,
+    "propagation_traced": 345,
+    "wrong": 361
+  }
+}
