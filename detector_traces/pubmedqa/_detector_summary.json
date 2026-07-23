@@ -1,0 +1,24 @@
+{
+  "specialized_board": {
+    "n_scored": 500,
+    "n_skipped": 0,
+    "wrong": 154,
+    "has_sycophantic_flip": 74,
+    "has_other_finding": 37,
+    "has_contradiction": 51,
+    "high_hallucination": 4,
+    "consensus_illusion": 4,
+    "propagation_traced": 4
+  },
+  "symmetric_debate": {
+    "n_scored": 500,
+    "n_skipped": 0,
+    "wrong": 136,
+    "has_other_finding": 27,
+    "has_sycophantic_flip": 24,
+    "has_contradiction": 24,
+    "high_hallucination": 2,
+    "propagation_traced": 3,
+    "consensus_illusion": 1
+  }
+}
