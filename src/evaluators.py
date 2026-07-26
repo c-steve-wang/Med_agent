@@ -1,6 +1,8 @@
 import json
 import pandas as pd
 import numpy as np
+import itertools
+import numpy as np
 import time
 from typing import List, Dict, Any
 from src.datastructures import MedicalCase, ExecutionTrace
@@ -17,7 +19,7 @@ def load_qa_dataset(path='data/QA_data.json'):
             dataset_name="Drive_QA",
             case_text=item.get('question'),
             options=None,
-            evidence_context=" ".join(item.get('Scoring_Points', [])),
+            evidence_context=None,
             gold_label=gold_label
         ))
     return cases
@@ -41,7 +43,26 @@ def load_pubmedqa_dataset(questions_path='data/ori_pqal.json', ground_truth_path
             gold_label=gold_label
         ))
     return cases
+def load_qausmle_dataset(path='data/test.jsonl'): # Changed default path to .jsonl
+    """Loads QAUSMLE data from JSONL file into MedicalCase objects."""
+    cases = []
+    with open(path, 'r', encoding='utf-8') as f:
+        for idx, line in enumerate(f):
+            item = json.loads(line.strip())
+            gold_label = item.get('answer_idx')
+            if gold_label is None:
+                # Fallback if 'answer_idx' is not present, though it should be for this format
+                gold_label = item.get('answer', ' ')[0]
 
+            cases.append(MedicalCase(
+                case_id=str(idx), # Using index as case_id for now
+                dataset_name="QAUSMLE",
+                case_text=item.get('question'),
+                options=item.get('options'),
+                evidence_context=None, # Not provided in this format
+                gold_label=gold_label
+            ))
+    return cases
 class MedicalAuditEvaluator:
     """
     Implementation of Core Metrics for Multi-Agent Clinical Analysis.
@@ -133,40 +154,78 @@ class MedicalAuditEvaluator:
                 else:
                     return {"score": None, "justification": "", "usage": {"tokens": tokens_used}, "error": str(e)}
 
+
     def run_cara_llm_evaluation(self, case: MedicalCase, trace: ExecutionTrace) -> dict:
-        # CARA LLM is designed for comparing two agents. We'll take the first two agents
-        # from Round 1 outputs if available.
-        agent_ids = list(trace.round_1_outputs.keys())
-        if len(agent_ids) < 2:
-            # If less than 2 agents, CARA LLM comparison is not applicable.
-            return {"cara_llm_score": None, "cara_llm_sd": None, "cara_llm_cost": 0, "n_cara_runs": 0}
+        # Gather all agents from Round 1 and Round 2 (if applicable)
+        agents_pool = []
 
-        agent_a_id = agent_ids[0]
-        agent_b_id = agent_ids[1]
-        agent_a_output = trace.round_1_outputs[agent_a_id]
-        agent_b_output = trace.round_1_outputs[agent_b_id]
 
-        scores = []
+        
+        if hasattr(trace, 'round_1_outputs') and trace.round_1_outputs:
+            for aid, output in trace.round_1_outputs.items():
+                # Suffix ensures uniqueness if the same agent ID exists in both rounds
+                agents_pool.append({"id": f"{aid}_r1", "output": output})
+                
+        if hasattr(trace, 'round_2_outputs') and trace.round_2_outputs:
+            for aid, output in trace.round_2_outputs.items():
+                agents_pool.append({"id": f"{aid}_r2", "output": output})
+
+        # If there are fewer than 2 agents total, pairwise comparison isn't possible
+        if len(agents_pool) < 2:
+            return {
+                "pairwise_results": {},
+                "total_cara_cost": 0.0,
+                "total_n_cara_runs": 0
+            }
+
+        pairwise_results = {}
         total_cara_tokens = 0
+        total_runs = 0
 
-        for run_idx in range(self.NUM_CARA_RUNS):
+        # Iterate through all unique pairs of agents
+        for agent_a, agent_b in itertools.combinations(agents_pool, 2):
+            if ("r1" in agent_a["id"] and "r1" in agent_b["id"]) or \
+                ("r2" in agent_a["id"] and "r2" in agent_b["id"]):
+                continue
+
+            agent_a_id, agent_a_output = agent_a["id"], agent_a["output"]
+            agent_b_id, agent_b_output = agent_b["id"], agent_b["output"]
+
+            scores = []
+            pair_tokens = 0
+
             res = self._call_cara_llm_once(case, agent_a_id, agent_a_output, agent_b_id, agent_b_output)
             if res["score"] is not None:
                 scores.append(res["score"])
-            total_cara_tokens += res["usage"].get("tokens", 0)
+            pair_tokens += res["usage"].get("tokens", 0)
 
-        if scores:
-            mean_score = np.mean(scores)
-            sd_score = np.std(scores) if len(scores) > 1 else 0.0
-            cost = total_cara_tokens * self.llm_client_for_cara.output_token_cost
-            return {
-                "cara_llm_score": round(mean_score, 4),
-                "cara_llm_sd": round(sd_score, 4),
-                "cara_llm_cost": cost,
-                "n_cara_runs": len(scores)
-            }
-        else:
-            return {"cara_llm_score": None, "cara_llm_sd": None, "cara_llm_cost": total_cara_tokens * self.llm_client_for_cara.output_token_cost, "n_cara_runs": 0}
+            total_cara_tokens += pair_tokens
+            total_runs += len(scores)
+            pair_key = f"{agent_a_id}_vs_{agent_b_id}"
+
+            if scores:
+                mean_score = np.mean(scores)
+                sd_score = np.std(scores) if len(scores) > 1 else 0.0
+                pairwise_results[pair_key] = {
+                    "cara_llm_score": round(mean_score, 4),
+                    "cara_llm_sd": round(sd_score, 4),
+                    "n_cara_runs": len(scores)
+                }
+            else:
+                pairwise_results[pair_key] = {
+                    "cara_llm_score": None,
+                    "cara_llm_sd": None,
+                    "n_cara_runs": 0
+                }
+
+        # Calculate global cost across all evaluations
+        total_cost = total_cara_tokens * self.llm_client_for_cara.output_token_cost
+
+        return {
+            "pairwise_results": pairwise_results,
+            "total_cara_cost": total_cost,
+            "total_n_cara_runs": total_runs
+        }
 
     def calculate_metrics(self, trace: ExecutionTrace, gold_label: str):
         """Processes a single trace to compute metrics."""
@@ -216,8 +275,7 @@ class MedicalAuditEvaluator:
         avg_conf = np.mean(confidences)
 
         # 6. CARA LLM Evaluation (Reasoning Alignment)
-        # Note: The cara_llm_score, sd, and cost are now being passed in from the orchestrator loop.
-        # This method's purpose is to calculate *metrics from the trace itself*, not to run LLM calls.
+        # Note: The cara_pairwise_results and cara_llm_cost are passed in from the orchestrator loop.
 
         metrics = {
             "case_id": trace.case_id,
@@ -227,9 +285,8 @@ class MedicalAuditEvaluator:
             "evidence_overlap": avg_evidence_overlap,
             "revision_utility": utility,
             "avg_confidence": avg_conf,
-            "cara_llm_score": None, # These will be overwritten by the orchestrator after this call.
-            "cara_llm_sd": None,
-            "cara_llm_cost": 0,
+            "cara_pairwise_results": {}, # Overwritten by the orchestrator after this call
+            "cara_llm_cost": 0.0,         # Overwritten by the orchestrator after this call
             "cost": trace.estimated_cost
         }
         self.results.append(metrics)
@@ -237,13 +294,24 @@ class MedicalAuditEvaluator:
 
     def get_summary(self):
         df = pd.DataFrame(self.results)
+        
+        # Safely extract and flatten all pairwise scores across all evaluated cases
+        all_cara_scores = []
+        if 'cara_pairwise_results' in df.columns:
+            for pair_dict in df['cara_pairwise_results'].dropna():
+                if isinstance(pair_dict, dict):
+                    for metrics_dict in pair_dict.values():
+                        score = metrics_dict.get('cara_llm_score')
+                        if score is not None:
+                            all_cara_scores.append(score)
+
         summary = {
             "Mean Accuracy": df['correct'].mean(),
             "Consensus Shift": df['agreement_r2'].mean() - df['agreement_r1'].mean(),
             "Avg Evidence Overlap": df['evidence_overlap'].mean(),
             "Total Revision Utility": df['revision_utility'].sum(),
-            "Mean CARA LLM Score": df['cara_llm_score'].mean() if 'cara_llm_score' in df.columns else None,
-            "Total CARA LLM Cost": df['cara_llm_cost'].sum() if 'cara_llm_cost' in df.columns else 0,
+            "Mean CARA LLM Score": np.mean(all_cara_scores) if all_cara_scores else None,
+            "Total CARA LLM Cost": df['cara_llm_cost'].sum() if 'cara_llm_cost' in df.columns else 0.0,
             "Total Cost": df['cost'].sum()
         }
         return summary
