@@ -121,10 +121,11 @@ class AuditPipelineOrchestrator:
             total_p_tokens += p_tokens
             total_c_tokens += c_tokens
 
-        peer_context = "\n".join([f"- {role}: {data.get('reasoning')}" for role, data in r1_results.items()])
-        final_prompt = base_prompt + f"\n### PEER SPECIALIST INSIGHTS\n{peer_context}\nFinalize the diagnosis and treatment plan."
+
 
         for agent_id, role_desc in roles.items():
+            peer_context = "\n".join([f"- {role}: Reasoning: {data.get('reasoning')} Answer: {data.get('final_answer')}" for role, data in r1_results.items() if role != agent_id])
+            final_prompt = base_prompt + f"\n### PEER SPECIALIST INSIGHTS\n{peer_context}\nFinalize the diagnosis and treatment plan."
             out, p_tokens, c_tokens = self.client.call_agent(final_prompt, agent_role=role_desc)
             r2_results[agent_id] = out
             total_p_tokens += p_tokens
