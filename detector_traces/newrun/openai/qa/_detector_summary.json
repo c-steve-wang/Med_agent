@@ -1,0 +1,13 @@
+{
+  "specialized_board": {
+    "n_scored": 500,
+    "n_skipped": 0,
+    "has_other_finding": 319,
+    "propagation_traced": 214,
+    "has_contradiction": 82,
+    "wrong": 76,
+    "has_sycophantic_flip": 34,
+    "high_hallucination": 69,
+    "consensus_illusion": 5
+  }
+}

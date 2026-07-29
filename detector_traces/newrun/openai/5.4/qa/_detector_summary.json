@@ -1,0 +1,13 @@
+{
+  "symmetric_debate": {
+    "n_scored": 500,
+    "n_skipped": 0,
+    "has_other_finding": 337,
+    "propagation_traced": 202,
+    "high_hallucination": 66,
+    "has_contradiction": 72,
+    "has_sycophantic_flip": 20,
+    "wrong": 77,
+    "consensus_illusion": 3
+  }
+}
