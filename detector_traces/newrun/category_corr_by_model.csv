@@ -1,0 +1,16 @@
+model,category,corr_with_error,n_flagged
+DeepSeek,contradiction,0.2021343702481903,158
+DeepSeek,error_propagation,0.04780967822301288,71
+DeepSeek,hallucination,0.07727680166814983,477
+DeepSeek,other,0.05708639646590308,852
+DeepSeek,sycophancy,0.26052874124520553,43
+OpenAI,contradiction,0.21208128615087898,483
+OpenAI,error_propagation,0.152748289528223,1598
+OpenAI,hallucination,0.11882888836499714,1213
+OpenAI,other,0.12562551035910038,2845
+OpenAI,sycophancy,0.24179662509925418,97
+Qwen,contradiction,0.2998026758347226,134
+Qwen,error_propagation,0.054947480559638814,188
+Qwen,hallucination,0.051235690706430685,315
+Qwen,other,0.2502243646586965,503
+Qwen,sycophancy,0.3098960548769663,76
