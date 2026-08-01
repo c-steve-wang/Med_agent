@@ -1,0 +1,19 @@
+method,metric,corr_with_error
+Role-Specialist Board,hallucinated_evidence_rate,0.1002870553892456
+Role-Specialist Board,reasoning_alignment_r1,-0.09906329595511362
+Role-Specialist Board,reasoning_alignment_r2,-0.005326084261328668
+Role-Specialist Board,answer_agreement_r1,-0.3339360389087445
+Role-Specialist Board,answer_agreement_r2,-0.07920245381224751
+Role-Specialist Board,reasoning_alignment_delta,0.08407412008209784
+Role-Specialist Board,answer_agreement_delta,0.33591319536824843
+Role-Specialist Board,n_sycophantic_flip_agents,0.3098695082601327
+Role-Specialist Board,n_findings_total,0.1760563592374595
+Symmetric Debate,hallucinated_evidence_rate,0.08263389174968999
+Symmetric Debate,reasoning_alignment_r1,-0.15919509483008956
+Symmetric Debate,reasoning_alignment_r2,-0.02456539879127379
+Symmetric Debate,answer_agreement_r1,-0.17428815292932012
+Symmetric Debate,answer_agreement_r2,-0.15653147929213101
+Symmetric Debate,reasoning_alignment_delta,0.12255180966901365
+Symmetric Debate,answer_agreement_delta,0.06849706576732968
+Symmetric Debate,n_sycophantic_flip_agents,0.19909432314861725
+Symmetric Debate,n_findings_total,0.12851293724075544

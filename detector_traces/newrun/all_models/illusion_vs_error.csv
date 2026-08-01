@@ -1,0 +1,13 @@
+model,method,consensus_illusion_flag,is_wrong
+DeepSeek,Role-Specialist Board,False,0.14747474747474748
+DeepSeek,Role-Specialist Board,True,0.6
+DeepSeek,Symmetric Debate,False,0.1529175050301811
+DeepSeek,Symmetric Debate,True,0.3333333333333333
+OpenAI,Role-Specialist Board,False,0.14747474747474748
+OpenAI,Role-Specialist Board,True,0.6
+OpenAI,Symmetric Debate,False,0.1529175050301811
+OpenAI,Symmetric Debate,True,0.3333333333333333
+Qwen,Role-Specialist Board,False,0.14747474747474748
+Qwen,Role-Specialist Board,True,0.6
+Qwen,Symmetric Debate,False,0.1529175050301811
+Qwen,Symmetric Debate,True,0.3333333333333333

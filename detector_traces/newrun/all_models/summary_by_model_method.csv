@@ -1,0 +1,7 @@
+model,method,n_cases,error_rate,mean_hallucination_rate,mean_reasoning_alignment_r1,mean_reasoning_alignment_r2,mean_answer_agreement_r1,mean_answer_agreement_r2,consensus_illusion_rate,mean_sycophantic_flips,mean_findings_per_case
+DeepSeek,Role-Specialist Board,500,0.152,0.068318,0.42626400000000003,0.528738,0.9486420000000001,0.983992,0.01,0.056,2.556
+OpenAI,Role-Specialist Board,500,0.152,0.162472,0.42626400000000003,0.528738,0.9486420000000001,0.983992,0.01,0.12,8.878
+Qwen,Role-Specialist Board,500,0.152,0.028684,0.42626400000000003,0.528738,0.9486420000000001,0.983992,0.01,0.092,1.788
+DeepSeek,Symmetric Debate,500,0.154,0.058036000000000004,0.504528,0.538852,0.978656,0.991996,0.006,0.03,2.35
+OpenAI,Symmetric Debate,500,0.154,0.154346,0.504528,0.538852,0.978656,0.991996,0.006,0.074,9.284
+Qwen,Symmetric Debate,500,0.154,0.049026,0.504528,0.538852,0.978656,0.991996,0.006,0.06,1.65
